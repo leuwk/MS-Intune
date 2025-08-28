@@ -5,6 +5,7 @@
 .DESCRIPTION
     This script sets the user’s desktop wallpaper to a predefined file.
     It runs in HKCU (user context), overriding Spotlight after login.
+    Note: Changes may only apply after first reboot.
 
 .NOTES
     Deploy via Intune as a user-targeted Platform script.
@@ -15,6 +16,26 @@ try {
     $wallpaperPath = "C:\Windows\Web\Wallpaper\Default\wallpaper.jpg"
     $wallpaperRegPath = "HKCU:\Control Panel\Desktop"
     $cloudContentRegPath = "HKCU:\Software\Policies\Microsoft\Windows\CloudContent"
+    $windowsSpotlightRegPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\DesktopSpotlight\Settings"
+
+    # --- Test CloudContent registry key exists, create if not ---    
+    if (-not (Test-Path $cloudContentRegPath)) {
+        New-Item -Path "HKCU:\Software\Policies\Microsoft\Windows" -Name "CloudContent" -Force | Out-Null
+        Write-Output "Created policy key: $cloudContentRegPath"
+    }
+
+    # --- Disable Windows Spotlight features generally ---
+    Set-ItemProperty -Path $cloudContentRegPath -Name "DisableWindowsSpotlightFeatures" -Value 1 -Force | Out-Null
+    Set-ItemProperty -Path $cloudContentRegPath -Name "DisableSpotlightCollectionOnDesktop" -Value 1 -Force | Out-Null
+
+    # --- Test Spotlight Settings registry key exists, create if not ---    
+    if (-not (Test-Path $windowsSpotlightRegPath)) {
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\DesktopSpotlight" -Name "Settings" -Force | Out-Null
+        Write-Output "Created policy key: $windowsSpotlightRegPath"
+    }
+
+    # --- Disable Windows Spotlight EnabledState ---
+    Set-ItemProperty -Path $windowsSpotlightRegPath -Name "EnabledState" -Value 0 -Force | Out-Null
 
     # --- Test Wallpaper exists on system, exit failed if not ---
     if (-not (Test-Path $wallpaperPath)) {
@@ -29,16 +50,6 @@ try {
     # --- Force Windows to refresh wallpaper ---
     RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
     Write-Output "Refreshed desktop wallpaper."
-
-    # --- Test registry CloudContent registry key exists, create if not ---    
-    if (-not (Test-Path $cloudContentPolicyPath)) {
-        New-Item -Path "HKCU:\Software\Policies\Microsoft\Windows" -Name "CloudContent" -Force | Out-Null
-        Write-Output "Created policy key: $cloudContentPolicyPath"
-    }
-
-    # --- Disable Windows Spotlight features generally ---
-    Set-ItemProperty -Path $cloudContentPolicyPath -Name "DisableWindowsSpotlightFeatures" -Value 1 -Force | Out-Null
-    Set-ItemProperty -Path $cloudContentPolicyPath -Name "DisableSpotlightCollectionOnDesktop" -Value 1 -Force | Out-Null
 
     Write-Output "Set user policy to disable Windows Spotlight. Exiting."
     exit 0
