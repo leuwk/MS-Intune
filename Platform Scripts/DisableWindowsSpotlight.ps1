@@ -47,6 +47,9 @@ try {
     Set-ItemProperty -Path $wallpaperRegPath -Name "WallPaper" -Value $wallpaperPath -Force
     Write-Output "Set HKCU wallpaper to $wallpaperPath"
 
+    # -- Kill Shell Experience Host process (Controls Spotlight) ---
+    Stop-Process -Name ShellExperienceHost -Force -ErrorAction SilentlyContinue
+
     # --- Force Windows to refresh wallpaper ---
     RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
     Write-Output "Refreshed desktop wallpaper."
