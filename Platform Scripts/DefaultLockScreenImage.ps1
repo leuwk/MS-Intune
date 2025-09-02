@@ -14,7 +14,7 @@
 
 try {
     # --- Config ---
-    $lockscreenUrl  = "https://wacestorage01.blob.core.windows.net/public/intune/customers/LUKE001/lockscreen.jpg"
+    $lockscreenUrl  = "https://url.to/lockscreen.jpg"
 
     $lockscreenDir  = "C:\Windows\Web\Wallpaper\Default"
     $lockscreenPath = Join-Path $lockscreenDir "lockscreen.jpg"

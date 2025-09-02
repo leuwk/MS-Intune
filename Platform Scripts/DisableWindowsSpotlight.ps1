@@ -8,6 +8,7 @@
     Note: Changes may only apply after first reboot.
 
 .NOTES
+    Update $wallpaperPath to desired value.
     Deploy via Intune as a user-targeted Platform script.
 #>
 
@@ -36,6 +37,7 @@ try {
 
     # --- Disable Windows Spotlight EnabledState ---
     Set-ItemProperty -Path $windowsSpotlightRegPath -Name "EnabledState" -Value 0 -Force | Out-Null
+    Set-ItemProperty -Path $windowsSpotlightRegPath -Name "OneTimeUpgrade" -Value 1 -Force | Out-Null
 
     # --- Test Wallpaper exists on system, exit failed if not ---
     if (-not (Test-Path $wallpaperPath)) {

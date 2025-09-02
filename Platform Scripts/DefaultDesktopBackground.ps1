@@ -1,7 +1,7 @@
 try {
     # --- Config ---
-    $wallpaperUrl  = "https://wacestorage01.blob.core.windows.net/public/intune/customers/LUKE001/wallpaper.jpg"
-    $themeUrl      = "https://wacestorage01.blob.core.windows.net/public/intune/customers/LUKE001/default.theme"
+    $wallpaperUrl  = "https://url.to/wallpaper.jpg"
+    $themeUrl      = "https://url.to/default.theme"
 
     $wallpaperDir  = "C:\Windows\Web\Wallpaper\Default"
     $wallpaperPath = Join-Path $wallpaperDir "wallpaper.jpg"
