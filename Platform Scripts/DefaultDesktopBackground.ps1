@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+    Enforces a corporate wallpaper for each user at logon.
+
+.DESCRIPTION
+    This script sets the default user’s desktop wallpaper to a predefined file.
+    Note: Changes may only apply after first reboot.
+
+.NOTES
+    Update $wallpaperUrl and $themeUrl to desired values.
+    Update $wallpaperPath to desired value.
+    Deploy via Intune as a device-targeted Platform script.
+#>
+
 try {
     # --- Config ---
     $wallpaperUrl  = "https://url.to/wallpaper.jpg"
